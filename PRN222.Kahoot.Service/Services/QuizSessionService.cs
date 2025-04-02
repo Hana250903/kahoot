@@ -23,7 +23,7 @@ namespace PRN222.Kahoot.Service.Services
 
         public Task<bool> CreateQuizSession(QuizSessionModel quizSessionModel)
         {
-            throw new NotImplementedException();
+            var 
         }
 
         public Task<bool> DeleteQuizSession(int id)
@@ -36,9 +36,24 @@ namespace PRN222.Kahoot.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<Pagination<QuizSessionModel>> GetQuizSessions(PaginationModel paginationModel)
+        public async Task<Pagination<QuizSessionModel>> GetQuizSessions(PaginationModel paginationModel)
         {
-            throw new NotImplementedException();
+            var quizSessions = await _unitOfWork.QuizSessionRepository.GetAsync();
+
+            var result = quizSessions.Select(c => new QuizSessionModel
+            {
+                SessionId = c.SessionId,
+                HostId = c.HostId,
+                QuizId = c.QuizId,
+                CodeRoom = c.CodeRoom,
+                StartTime = c.StartTime,
+                EndTime = c.EndTime,
+                IsActive = c.IsActive,
+                TotalQuestion = c.TotalQuestion,
+                TotalScore = c.TotalScore
+            }).Skip((paginationModel.PageIndex - 1) * paginationModel.PageSize).Skip(paginationModel.PageSize).ToList();
+
+            return new Pagination<QuizSessionModel>(result, quizSessions.Count());
         }
 
         public Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel)

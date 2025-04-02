@@ -1,0 +1,78 @@
+﻿@page
+@model PRN222.Kahoot.Razor.Pages.Room.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].CodeRoom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].TotalQuestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].TotalScore)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].Host)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizSession[0].Quiz)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.QuizSession) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CodeRoom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalQuestion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalScore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Host.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quiz.Title)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.SessionId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.SessionId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.SessionId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

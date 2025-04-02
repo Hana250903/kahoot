@@ -30,9 +30,17 @@ namespace PRN222.Kahoot.Service.Services
             return true;
         }
 
-        public Task<bool> DeleteQuestion(int id)
+        public async Task<bool> DeleteQuestion(int id)
         {
-            throw new NotImplementedException();
+            var question = await _unitOfWork.QuestionRepository.FindAsync(c => c.QuestionId == id);
+            if (question == null)
+            {
+                return false;
+            }
+
+            await _unitOfWork.QuestionRepository.DeletedAsync(question);
+            await _unitOfWork.SaveChangeAsync();
+            return true;
         }
 
         public async Task<QuestionModel> GetById(int id)
