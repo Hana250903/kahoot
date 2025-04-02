@@ -1,4 +1,13 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿"use strict";
 
-// Write your JavaScript code.
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/signalRServer")
+    .build();
+
+connection.on("LoadAllItems", function () {
+    location.href = '/Medicine/Index';
+});
+
+// Khởi động connection
+connection.start()
+    .catch(err => console.error(err.toString()));

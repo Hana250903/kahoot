@@ -36,7 +36,7 @@ namespace PRN222.Kahoot.Service.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Pagination<QuizModel>> GetQuizs(PaginationModel paginationModel)
+        public async Task<Pagination<QuizModel>> GetQuizs(PaginationModel? paginationModel)
         {
             var quizs = await _unitOfWork.QuizRepository.GetAsync();
 

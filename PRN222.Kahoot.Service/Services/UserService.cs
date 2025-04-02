@@ -134,6 +134,7 @@ namespace PRN222.Kahoot.Service.Services
                 var claim = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role)
             };
 

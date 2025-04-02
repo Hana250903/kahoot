@@ -17,7 +17,7 @@ public class IndexModel : PageModel
         _logger.LogInformation($"User authenticated: {User.Identity!.IsAuthenticated}");
         if (User.Identity!.IsAuthenticated)
         {
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Question/Index");
         }
         return RedirectToPage("/Account/Register");
     }

@@ -16,9 +16,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login"; // Redirect to this path if unauthenticated
+        options.LogoutPath = "/Account/Logout"; // Redirect to this path if logged out
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Lax; // Adjust based on your needs
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use Always if HTTPS, None if HTTP on localhost
+        options.Cookie.MaxAge = TimeSpan.FromMinutes(10); // Adjust based on your needs
     });
 
 builder.Services.AddDbContext<KahootContext>(options =>
