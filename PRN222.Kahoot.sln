@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN222.Kahoot.Repository", "PRN222.Kahoot.Repository\PRN222.Kahoot.Repository.csproj", "{54B025A8-3365-4A1F-8DC9-24742DF2B691}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN222.Kahoot.Service", "PRN222.Kahoot.Service\PRN222.Kahoot.Service.csproj", "{E183A7B7-6A17-435F-96E9-D2DC030B8C5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN222.Kahoot.Razor", "PRN222.Kahoot.Razor\PRN222.Kahoot.Razor.csproj", "{DB7ED541-FA09-4482-AC7F-9BF72605171C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN222.Kahoot.MVC", "PRN222.Kahoot.MVC\PRN222.Kahoot.MVC.csproj", "{69390FE6-AD09-4F20-BDFA-197835FD4D27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54B025A8-3365-4A1F-8DC9-24742DF2B691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B025A8-3365-4A1F-8DC9-24742DF2B691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54B025A8-3365-4A1F-8DC9-24742DF2B691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54B025A8-3365-4A1F-8DC9-24742DF2B691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E183A7B7-6A17-435F-96E9-D2DC030B8C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E183A7B7-6A17-435F-96E9-D2DC030B8C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E183A7B7-6A17-435F-96E9-D2DC030B8C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E183A7B7-6A17-435F-96E9-D2DC030B8C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB7ED541-FA09-4482-AC7F-9BF72605171C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB7ED541-FA09-4482-AC7F-9BF72605171C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB7ED541-FA09-4482-AC7F-9BF72605171C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB7ED541-FA09-4482-AC7F-9BF72605171C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69390FE6-AD09-4F20-BDFA-197835FD4D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69390FE6-AD09-4F20-BDFA-197835FD4D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69390FE6-AD09-4F20-BDFA-197835FD4D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69390FE6-AD09-4F20-BDFA-197835FD4D27}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4062B5E3-22E8-4C7F-A196-D76EC72A5CD4}
+	EndGlobalSection
+EndGlobal
