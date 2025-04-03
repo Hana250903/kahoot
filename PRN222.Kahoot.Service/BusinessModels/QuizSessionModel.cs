@@ -22,6 +22,8 @@ namespace PRN222.Kahoot.Service.BusinessModels
 
         public DateTime? EndTime { get; set; }
 
+        public int? CurrentQuestionIndex { get; set; }
+
         public int? TotalQuestion { get; set; }
 
         public int? TotalScore { get; set; }

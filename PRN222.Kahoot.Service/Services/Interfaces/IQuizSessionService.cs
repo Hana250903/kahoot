@@ -15,5 +15,6 @@ namespace PRN222.Kahoot.Service.Services.Interfaces
         Task<QuizSessionModel> GetById(int id);
         Task<QuizSessionModel> GetRoom(string code);
         Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel);
+        Task<QuizSession> GetByCode(string code);
     }
 }

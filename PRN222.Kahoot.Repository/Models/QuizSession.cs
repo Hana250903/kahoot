@@ -21,6 +21,8 @@ public partial class QuizSession
 
     public DateTime? EndTime { get; set; }
 
+    public int? CurrentQuestionIndex { get; set; }
+
     public int? TotalQuestion { get; set; }
 
     public int? TotalScore { get; set; }

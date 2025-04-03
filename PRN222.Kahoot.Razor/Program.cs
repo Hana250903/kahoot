@@ -46,6 +46,17 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig).Assembly);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.SetIsOriginAllowed(_ => true) // Cho phép mọi origin
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,13 +75,18 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseCors("AllowAll");
+
 app.MapStaticAssets();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers(); // Thêm dòng này nếu chưa có
-    endpoints.MapRazorPages().WithStaticAssets(); ;
+    endpoints.MapHub<GameHub>("/gameHub");
+    endpoints.MapRazorPages().WithStaticAssets();
+    endpoints.MapGet("/", async context =>
+    {
+        context.Response.Redirect("/Account/Login");
+    });
 });
-app.MapHub<GameHub>("/gameHub");
 
 app.Run();
