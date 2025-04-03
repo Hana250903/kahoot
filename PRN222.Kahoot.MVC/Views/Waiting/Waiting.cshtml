@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Waiting Room";
+}
+
+<style>
+    body {
+        background: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F476804128_1010892111062884_2138589388959003989_n.jpg?alt=media&token=7456bb34-90f2-4cf0-9333-c7f2cf4f77ff') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .waiting-container {
+        text-align: center;
+        color: white;
+        margin-top: 15%;
+    }
+
+    .spinner {
+        border: 8px solid rgba(255, 255, 255, 0.2);
+        border-top: 8px solid #fff;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+
+<div class="waiting-container">
+    <h1 style="color: black;">Waiting for Host to Start...</h1>
+    <div class="spinner"></div>
+    <p style="color: black;" id="playerCount">Players joined: 0</p>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function updatePlayerCount() {
+                $.get("/api/participants", function(data) {
+                    $("#playerCount").text("Players joined: " + data.length);
+                });
+            }
+
+            setInterval(updatePlayerCount, 3000);
+        });
+    </script>
+}

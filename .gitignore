@@ -398,3 +398,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Thêm appsettings.json hoặc các biến thể
+appsettings.*.json
+!appsettings.json

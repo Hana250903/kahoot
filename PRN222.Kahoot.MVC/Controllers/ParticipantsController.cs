@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PRN222.Kahoot.Service.BusinessModels;
 using PRN222.Kahoot.Service.Interfaces;
 using PRN222.Kahoot.Service.Services.Interfaces;
@@ -6,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace PRN222.Kahoot.MVC.Controllers
 {
-    [ApiController]
+	[Authorize]  // Yêu cầu đăng nhập để truy cập tất cả các action trong GameController
+
+	[ApiController]
     [Route("participants")]
     public class ParticipantsController : Controller
     {

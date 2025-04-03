@@ -1,0 +1,219 @@
+﻿@model PRN222.Kahoot.Service.BusinessModels.QuestionModel
+
+@{
+    ViewData["Title"] = "Game";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F476927559_1010892051062890_6842004734375534282_n.jpg?alt=media&token=d730c6a6-9b0a-45d2-ae83-fb67a8cf5a9f');
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bodyconfig {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1150px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 45px;
+            height: 770px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .option {
+            padding: 20px;
+            font-size: 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            height: 150px;
+        }
+
+        .option-A {
+            background-color: #FF6347;
+        }
+
+        .option-B {
+            background-color: #4682B4;
+        }
+
+        .option-C {
+            background-color: #32CD32;
+        }
+
+        .option-D {
+            background-color: #FFD700;
+        }
+
+        .option:hover {
+            opacity: 0.8;
+        }
+
+        .timer {
+            font-size: 30px;
+            font-weight: bold;
+            color: red;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bodyconfig">
+        <div class="game-container">
+            <h2>Trò chơi Kahoot</h2>
+
+            <!-- Hiển thị thời gian đếm ngược -->
+            <div class="timer" id="timer"></div>
+
+            <!-- Hiển thị câu hỏi -->
+            <div class="question">
+                @Model.QuestionText
+            </div>
+
+            <!-- Các lựa chọn -->
+            <div class="options">
+                <div class="option option-A" onclick="selectAnswer('A')">
+                    A. @Model.Question1
+                </div>
+                <div class="option option-B" onclick="selectAnswer('B')">
+                    B. @Model.Question2
+                </div>
+                <div class="option option-C" onclick="selectAnswer('C')">
+                    C. @Model.Question3
+                </div>
+                <div class="option option-D" onclick="selectAnswer('D')">
+                    D. @Model.Question4
+                </div>
+            </div>
+
+            <script>
+                function selectAnswer(answer) {
+                    // Gửi câu trả lời qua AJAX đến server
+                    $.ajax({
+                        url: '@Url.Action("SubmitAnswer", "Game")',
+                        type: 'POST',
+                        data: {
+                            quizSessionId: '@ViewBag.QuizSessionId',
+                            answer: answer,
+                            currentQuestionIndex: '@ViewBag.CurrentQuestionIndex'
+                        },
+                        success: function (response) {
+                            console.log('Câu trả lời đã được gửi');
+
+                            // Tính toán câu hỏi tiếp theo
+                            var nextQuestionIndex = @ViewBag.CurrentQuestionIndex + 1;
+                            if (nextQuestionIndex < @ViewBag.QuestionCount) {
+                                // Điều hướng đến câu hỏi tiếp theo
+                                window.location.href = '/Game/Game?quizSessionId=' + @ViewBag.QuizSessionId + '&currentQuestionIndex=' + nextQuestionIndex;
+                            } else {
+                                // Nếu hết câu hỏi, điều hướng đến trang GameOver
+                                window.location.href = '/Game/GameOver?quizSessionId=' + @ViewBag.QuizSessionId;
+                            }
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra khi gửi câu trả lời.');
+                        }
+                    });
+                }
+            </script>
+
+            <!-- Các nút điều hướng câu hỏi -->
+            <div class="navigation">
+                @if (ViewBag.CurrentQuestionIndex != null && ViewBag.CurrentQuestionIndex > 0)
+                {
+                    <a href="/Game/Game?quizSessionId=@ViewBag.QuizSessionId&currentQuestionIndex=@(ViewBag.CurrentQuestionIndex - 1)">Trở lại</a>
+                }
+
+                @if (ViewBag.CurrentQuestionIndex != null && ViewBag.CurrentQuestionIndex < ViewBag.QuestionCount - 1)
+                {
+                    <a href="/Game/Game?quizSessionId=@ViewBag.QuizSessionId&currentQuestionIndex=@(ViewBag.CurrentQuestionIndex + 1)">Tiếp theo</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lấy thời gian Duration từ ViewBag và bắt đầu bộ đếm ngược
+        var duration = @ViewBag.Duration;
+        var timerElement = document.getElementById('timer');
+        var countdown = duration;
+
+        // Hàm đếm ngược
+        function startTimer() {
+            var timerInterval = setInterval(function() {
+                // Hiển thị thời gian còn lại
+                timerElement.textContent = "Thời gian còn lại: " + countdown + " giây";
+
+                // Khi hết thời gian, dừng đếm ngược và chuyển sang câu hỏi tiếp theo
+                if (countdown <= 0) {
+                    clearInterval(timerInterval);
+
+                    // Tính toán câu hỏi tiếp theo
+                    var nextQuestionIndex = @ViewBag.CurrentQuestionIndex + 1;
+                    if (nextQuestionIndex < @ViewBag.QuestionCount) {
+                        // Điều hướng đến câu hỏi tiếp theo
+                        window.location.href = '/Game/Game?quizSessionId=' + @ViewBag.QuizSessionId + '&currentQuestionIndex=' + nextQuestionIndex;
+                    } else {
+                        // Nếu hết câu hỏi, điều hướng đến trang GameOver
+                        window.location.href = '/Game/GameOver?quizSessionId=' + @ViewBag.QuizSessionId;
+                    }
+                }
+
+                countdown--;
+            }, 1000);
+        }
+
+        // Bắt đầu đếm ngược khi trang được tải
+        window.onload = startTimer;
+    </script>
+</body>
+
+
+
+
+</html>

@@ -1,10 +1,12 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PRN222.Kahoot.MVC.Models;
 using System.Diagnostics;
 
 namespace PRN222.Kahoot.MVC.Controllers
 {
-    public class HomeController : Controller
+	[Authorize]  // Yêu cầu đăng nhập để truy cập tất cả các action trong GameController
+	public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
