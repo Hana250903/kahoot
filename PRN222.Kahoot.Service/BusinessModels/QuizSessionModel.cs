@@ -26,5 +26,6 @@ namespace PRN222.Kahoot.Service.BusinessModels
 
         public int? TotalScore { get; set; }
 
+        public string? QuizTitle { get; set; }
     }
 }
