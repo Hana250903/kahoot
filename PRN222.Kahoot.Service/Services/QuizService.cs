@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Repository.UnitOfWork;
 using PRN222.Kahoot.Service.BusinessModels;
 using PRN222.Kahoot.Service.Services.Interfaces;
@@ -21,20 +22,33 @@ namespace PRN222.Kahoot.Service.Services
             _mapper = mapper;
         }
 
-        public Task<bool> CreateQuiz(QuizModel quizModel)
+        public async Task<bool> CreateQuiz(QuizModel quizModel)
         {
-            throw new NotImplementedException();
-        }
+           var quiz = _mapper.Map<Quiz>(quizModel);
+			await _unitOfWork.QuizRepository.AddAsync(quiz);
+			await _unitOfWork.SaveChangeAsync();
+			return true;
+		}
 
-        public Task<bool> DeleteQuiz(int id)
+        public async Task<bool> DeleteQuiz(int id)
         {
-            throw new NotImplementedException();
-        }
+			var quiz = await _unitOfWork.QuizRepository.FindAsync(c => c.QuizId == id);
+			await _unitOfWork.QuizRepository.DeletedAsync(quiz);
+			await _unitOfWork.SaveChangeAsync();
+			return true;
+		}
 
-        public Task<QuizModel> GetById(int id)
+        public async Task<QuizModel> GetById(int id)
         {
-            throw new NotImplementedException();
-        }
+            var quiz = await _unitOfWork.QuizRepository.FindAsync(c => c.QuizId == id);
+			if (quiz == null)
+			{
+				return null;
+			}
+			var model = _mapper.Map<QuizModel>(quiz);
+
+			return model;
+		}
 
         public async Task<Pagination<QuizModel>> GetQuizs(PaginationModel? paginationModel)
         {
@@ -55,9 +69,19 @@ namespace PRN222.Kahoot.Service.Services
             return new Pagination<QuizModel>(result, count);
         }
 
-        public Task<bool> UpdateQuiz(QuizModel quizModel)
+        public async Task<bool> UpdateQuiz(QuizModel quizModel)
         {
-            throw new NotImplementedException();
-        }
+            var quiz = await _unitOfWork.QuizRepository.FindAsync(c => c.QuizId == quizModel.QuizId);
+			if (quiz == null)
+			{
+				return false;
+			}
+
+			var quizUpdate = _mapper.Map<Quiz>(quizModel);
+
+			await _unitOfWork.QuizRepository.UpdateAsync(quizUpdate);
+			await _unitOfWork.SaveChangeAsync();
+			return true;
+		}
     }
 }

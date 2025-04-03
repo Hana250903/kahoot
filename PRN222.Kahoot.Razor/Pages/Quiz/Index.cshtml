@@ -1,0 +1,60 @@
+﻿@page
+@model PRN222.Kahoot.Razor.Pages.Quiz.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz[0].Visibility)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz[0].CreateAt)
+            </th>
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.Quiz[0].CreateByNavigation) *@
+            @* </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Quiz) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Visibility)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateAt)
+            </td>
+            @* <td> *@
+            @*     @Html.DisplayFor(modelItem => item.CreateByNavigation.Role) *@
+            @* </td> *@
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.QuizId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.QuizId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.QuizId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
