@@ -6,28 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN222.Kahoot.Repository.Models;
+using PRN222.Kahoot.Service.BusinessModels;
+using PRN222.Kahoot.Service.Services;
+using PRN222.Kahoot.Service.Services.Interfaces;
 
 namespace PRN222.Kahoot.Razor.Pages.Room
 {
     public class DetailsModel : PageModel
     {
-        private readonly PRN222.Kahoot.Repository.Models.KahootContext _context;
+        private readonly IQuizSessionService _quizSessionService;
 
-        public DetailsModel(PRN222.Kahoot.Repository.Models.KahootContext context)
+        public DetailsModel(IQuizSessionService quizSessionService)
         {
-            _context = context;
+            _quizSessionService = quizSessionService;
         }
 
-        public QuizSession QuizSession { get; set; } = default!;
+        public QuizSessionModel QuizSession { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? sessionId)
         {
-            if (id == null)
+            if (sessionId == null)
             {
                 return NotFound();
             }
 
-            var quizsession = await _context.QuizSessions.FirstOrDefaultAsync(m => m.SessionId == id);
+            var quizsession = await _quizSessionService.GetById((int)sessionId);
 
             if (quizsession is not null)
             {

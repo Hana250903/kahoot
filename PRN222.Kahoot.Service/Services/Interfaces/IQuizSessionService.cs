@@ -1,4 +1,5 @@
-﻿using PRN222.Kahoot.Service.BusinessModels;
+﻿using PRN222.Kahoot.Repository.Models;
+using PRN222.Kahoot.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,9 @@ namespace PRN222.Kahoot.Service.Services.Interfaces
     public interface IQuizSessionService
     {
         Task<Pagination<QuizSessionModel>> GetQuizSessions(PaginationModel paginationModel);
+        Task<QuizSession> CreateQuizSession(int quizId, int hostId);
         Task<QuizSessionModel> GetById(int id);
-        Task<bool> CreateQuizSession(QuizSessionModel quizSessionModel);
+        Task<QuizSessionModel> GetRoom(string code);
         Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel);
-        Task<bool> DeleteQuizSession(int id);
-
-        Task<QuizModel> QuizDetails(int id);
     }
 }

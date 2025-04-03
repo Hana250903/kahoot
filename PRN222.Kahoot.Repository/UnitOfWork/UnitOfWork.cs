@@ -43,5 +43,20 @@ namespace PRN222.Kahoot.Repository.UnitOfWork
         {
             return await _context.SaveChangesAsync();
         }
+
+        public void ChangeTracker()
+        {
+            _context.ChangeTracker.Clear();
+        }
+
+        public void Detach<T>(T entity) where T : class
+        {
+            var entry = _context.Entry(entity);
+            if (entry.State != EntityState.Detached)
+            {
+                entry.State = EntityState.Detached; // Loại bỏ tracking của entity
+            }
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using PRN222.Kahoot.Razor;
 using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Repository.Repositories;
 using PRN222.Kahoot.Repository.UnitOfWork;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -24,7 +26,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddDbContext<KahootContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("KahootContext")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("KahootContext"));
+});
+
 
 builder.Services.AddHttpContextAccessor();
 
@@ -65,5 +70,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers(); // Thêm dòng này nếu chưa có
     endpoints.MapRazorPages().WithStaticAssets(); ;
 });
+app.MapHub<GameHub>("/gameHub");
 
 app.Run();

@@ -93,5 +93,16 @@ namespace PRN222.Kahoot.Service.Services
             await _unitOfWork.SaveChangeAsync();
             return true;
         }
+
+        public async Task<List<QuestionModel>> GetQuestionByQuizId(int quizId)
+        {
+            var question = await _unitOfWork.QuestionRepository.GetAsync(c => c.QuizId == quizId);
+            if (question == null)
+            {
+                return null;
+            }
+            var model = _mapper.Map<List<QuestionModel>>(question);
+            return model;
+        }
     }
 }

@@ -16,30 +16,56 @@ namespace PRN222.Kahoot.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IQuestionSessionService _questionSessionService;
 
-        public QuizSessionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuizSessionService(IUnitOfWork unitOfWork, IMapper mapper, IQuestionSessionService questionSessionService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _questionSessionService = questionSessionService;
         }
 
-        public async Task<bool> CreateQuizSession(QuizSessionModel quizSessionModel)
+        public async Task<QuizSession> CreateQuizSession(int quizId, int hostId)
         {
-            var quizSession = _mapper.Map<QuizSession>(quizSessionModel);
-            quizSession.StartTime = DateTime.UtcNow.AddHours(7);
-            await _unitOfWork.QuizSessionRepository.AddAsync(quizSession);
-            await _unitOfWork.SaveChangeAsync();
-            return true;
-        }
+            try
+            {
+                var quiz = await _unitOfWork.QuizRepository.FindAsync(c => c.QuizId == quizId);
+                if (quiz == null)
+                {
+                    throw new Exception("Quiz not found");
+                }
 
-        public Task<bool> DeleteQuizSession(int id)
-        {
-            throw new NotImplementedException();
-        }
+                var questions = await _unitOfWork.QuestionRepository.GetAsync(c => c.QuizId == quizId);
+                if (!questions.Any())
+                {
+                    throw new Exception("Quiz has no Questions!");
+                }
 
-        public Task<QuizSessionModel> GetById(int id)
-        {
-            throw new NotImplementedException();
+                var sessionModel = new QuizSessionModel
+                {
+                    QuizId = quizId,
+                    HostId = hostId,
+                    CodeRoom = GenerateRoomCode(),
+                    StartTime = DateTime.Now,
+                    IsActive = false,
+                    TotalQuestion = questions.Count,
+                    TotalScore = questions.Count * 10, // Giả định mỗi câu 10 điểm
+                };
+
+                var quizSession = _mapper.Map<QuizSession>(sessionModel);
+                var questionModel = _mapper.Map<List<QuestionModel>>(questions);
+                await _unitOfWork.QuizSessionRepository.AddAsync(quizSession);
+
+                await _unitOfWork.SaveChangeAsync();
+
+                var result = await _questionSessionService.CreateQuestionSession(quizSession.SessionId, questionModel);
+
+                return quizSession;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error in CreateQuizSession: {ex.Message}", ex);
+            }
         }
 
         public async Task<Pagination<QuizSessionModel>> GetQuizSessions(PaginationModel paginationModel)
@@ -63,22 +89,70 @@ namespace PRN222.Kahoot.Service.Services
             return new Pagination<QuizSessionModel>(result, quizSessions.Count());
         }
 
-        public Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel)
+        public async Task<QuizSessionModel> GetById(int id)
         {
-            throw new NotImplementedException();
+            var quizSession = await _unitOfWork.QuizSessionRepository.FindAsync(c => c.SessionId == id, c => c.Include(c => c.Quiz));
+            if (quizSession == null)
+            {
+                throw new Exception("Quiz session not found");
+            }
+
+            var quizSessionModel = new QuizSessionModel
+            {
+                SessionId = quizSession.SessionId,
+                HostId = quizSession.HostId,
+                QuizId = quizSession.QuizId,
+                CodeRoom = quizSession.CodeRoom,
+                StartTime = quizSession.StartTime,
+                EndTime = quizSession.EndTime,
+                IsActive = quizSession.IsActive,
+                TotalQuestion = quizSession.TotalQuestion,
+                TotalScore = quizSession.TotalScore,
+                QuizTitle = quizSession.Quiz.Title,
+            };
+
+            return quizSessionModel;
         }
 
-        public async Task<QuizModel> QuizDetails(int id)
+        private string GenerateRoomCode()
         {
-            //var list = await _unitOfWork.QuizRepository.GetAsync(c => c.QuizId == id, include: c => c.Include(i => i.Questions));
+            return Guid.NewGuid().ToString().Substring(0, 5).ToUpper(); // Tạo mã phòng 5 ký tự
+        }
 
-            //var quiz = list.Select( q => new
-            //{
-            //    TotalQuestion = q.Questions.Count(),
-            //    TotalScore = q.Questions.Sum(question => question.)
-            //}).FirstOrDefault();
+        public async Task<QuizSessionModel> GetRoom(string code)
+        {
+            var quizSession = await _unitOfWork.QuizSessionRepository.FindAsync(c =>c.CodeRoom == code, c => c.Include(c => c.Quiz));
 
-            throw new NotImplementedException();
+            if (quizSession == null)
+            {
+                throw new Exception("Room not found");
+            }
+            var quizSessionModel = new QuizSessionModel
+            {
+                SessionId = quizSession.SessionId,
+                HostId = quizSession.HostId,
+                QuizId = quizSession.QuizId,
+                CodeRoom = quizSession.CodeRoom,
+                StartTime = quizSession.StartTime,
+                EndTime = quizSession.EndTime,
+                IsActive = quizSession.IsActive,
+                TotalQuestion = quizSession.TotalQuestion,
+                TotalScore = quizSession.TotalScore,
+                QuizTitle = quizSession.Quiz.Title,
+            };
+
+            return quizSessionModel;
+        }
+
+        public async Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel)
+        {
+            var quizSession = _mapper.Map<QuizSession>(quizSessionModel);   
+            quizSession.IsActive = true;
+            quizSession.StartTime = DateTime.UtcNow.AddHours(7);
+
+            await _unitOfWork.QuizSessionRepository.UpdateAsync(quizSession);
+            await _unitOfWork.SaveChangeAsync();
+            return true;
         }
     }
 }

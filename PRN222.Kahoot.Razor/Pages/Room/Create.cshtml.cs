@@ -38,14 +38,19 @@ namespace PRN222.Kahoot.Razor.Pages.Room
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            try
             {
+                var session = await _quizSessionService.CreateQuizSession(QuizSession.QuizId, QuizSession.HostId);
+
+                TempData["SuccessMessage"] = "Room created successfully! Code: " + session.CodeRoom;
+                return RedirectToPage("./Details", new { sessionId = session.SessionId });
+            }
+            catch (Exception ex)
+            {
+                ViewData["QuizId"] = new SelectList(await _quizService.GetQuizs(PaginationModel = null), "QuizId", "Title");
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return Page();
             }
-
-            await _quizSessionService.CreateQuizSession(QuizSession);
-
-            return RedirectToPage("./Index");
         }
     }
 }

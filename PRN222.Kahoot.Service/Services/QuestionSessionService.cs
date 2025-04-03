@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Repository.UnitOfWork;
 using PRN222.Kahoot.Service.BusinessModels;
 using PRN222.Kahoot.Service.Services.Interfaces;
@@ -21,9 +22,27 @@ namespace PRN222.Kahoot.Service.Services
             _mapper = mapper;
         }
 
-        public Task<bool> CreateQuestionSession(QuestionSessionModel questionSessionModel)
+        public async Task<bool> CreateQuestionSession(int quizSessionId, List<QuestionModel> questionModel)
         {
-            throw new NotImplementedException();
+            int index = 1;
+            var questionSessions = questionModel.Select(question => new QuestionSessionModel
+            {
+                QuestionId = question.QuestionId,
+                QuizSessionId = quizSessionId,
+                QuestionIndex = index++,
+                Point = 10, // Giả định mỗi câu 10 điểm
+                StartTime = DateTime.UtcNow.AddHours(7),
+                EndTime = DateTime.UtcNow.AddHours(7).AddSeconds(question.Duration)
+            }).ToList();
+
+            var questionSessionEntities = _mapper.Map<List<QuestionSession>>(questionSessions);
+
+            await _unitOfWork.QuestionSessionRepository.AddRangeAsync(questionSessionEntities);
+            
+            await _unitOfWork.SaveChangeAsync();
+            Console.WriteLine("Question sessions created successfully.");
+
+            return true;
         }
 
         public Task<bool> DeleteQuestionSession(int id)

@@ -82,9 +82,7 @@ public partial class KahootContext : DbContext
         {
             entity.ToTable("QuestionSession");
 
-            entity.Property(e => e.QuestionSessionId)
-                .ValueGeneratedNever()
-                .HasColumnName("QuestionSessionID");
+            entity.Property(e => e.QuestionSessionId).HasColumnName("QuestionSessionID");
             entity.Property(e => e.EndTime).HasColumnType("datetime");
             entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.QuizSessionId).HasColumnName("QuizSessionID");
