@@ -1,0 +1,61 @@
+﻿@model PRN222.Kahoot.Service.BusinessModels.ParticipantModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center">Join Kahoot Session</h3>
+                </div>
+                <div class="card-body">
+                    <form id="joinForm">
+                        <div class="form-group mb-3">
+                            <label for="codeRoom" class="form-label">Code Room</label>
+                            <input type="text" class="form-control" id="codeRoom" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Join Session</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#joinForm').submit(function(e) {
+                e.preventDefault();
+
+                const codeRoom = $('#sessionCode').val(); 
+                const team = $('#team').val();
+
+                $.ajax({
+                    url: '/api/Participants/join',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        sessionCode: codeRoom,
+                        team: team
+                    }),
+                    success: function(response) {
+                        window.location.href = `/Participants/Details/${response.participantId}`;
+                    },
+                    error: function(xhr) {
+                        alert('Error joining session: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
