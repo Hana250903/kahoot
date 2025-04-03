@@ -1,5 +1,5 @@
-﻿@page "{sessionId}"
-@model PRN222.Kahoot.Razor.Pages.Room.DetailsModel
+﻿@page "{sessionId:int}"
+@model PRN222.Kahoot.Razor.Pages.Host.DetailsModel
 
 @{
     ViewData["Title"] = "Room Details";
@@ -26,4 +26,7 @@
     </tr>
 </table>
 
-<a asp-page="/Room/Join" asp-route-code="@Model.QuizSession.CodeRoom" class="btn btn-success">Join Room</a>
+<form method="post">
+    <input type="hidden" name="code" value="@Model.QuizSession.CodeRoom" />
+    <button type="submit" asp-page-handler="JoinRoom" class="btn btn-success">Join Room</button>
+</form>

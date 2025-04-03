@@ -1,0 +1,111 @@
+﻿@page "{roomCode}/{orderId:int?}"
+@model PRN222.Kahoot.Razor.Pages.Host.JoinModel
+
+@{
+    ViewData["Title"] = "Room";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h1 class="h3 mb-0">Question #@Model.CurrentOrder of @Model.TotalQuestions</h1>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <h2>@Model.CurrentQuestion.Question.QuestionText</h2>
+                <div id="timer" class="fw-bold text-danger fs-3"></div>
+                <div id="correctAnswer" class="mt-3 text-success fw-bold" style="display: none;">
+                    Correct Answer: @Model.CurrentQuestion.Question.Answer
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <strong>A.</strong> @Model.CurrentQuestion.Question.Question1
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <strong>B.</strong> @Model.CurrentQuestion.Question.Question2
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <strong>C.</strong> @Model.CurrentQuestion.Question.Question3
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <strong>D.</strong> @Model.CurrentQuestion.Question.Question4
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" asp-page-handler="NextQuestion" class="text-center mt-4" id="nextQuestionForm">
+                <input type="hidden" name="code" value="@Model.Code" />
+                <input type="hidden" name="currentOrder" value="@Model.CurrentOrder" />
+                <button type="submit" class="btn btn-primary" id="nextButton">Next Question</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/gameHub")
+            .build();
+
+        connection.start().catch(err => console.error(err));
+
+        // Đếm ngược thời gian dựa trên TimeLimit
+        let timeLimit = @(Model.CurrentQuestion?.Question?.Duration ?? 10);
+        let timeLeft = timeLimit;
+        const timerElement = document.getElementById("timer");
+        const correctAnswerElement = document.getElementById("correctAnswer");
+        const nextButton = document.getElementById("nextButton");
+        const nextQuestionForm = document.getElementById("nextQuestionForm");
+
+        if (!isNaN(timeLeft) && timeLeft > 0) {
+            timerElement.textContent = `Time Left: ${timeLeft}s`;
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    timerElement.textContent = "Time's up!";
+                    nextButton.disabled = true;
+
+                    // Hiển thị câu trả lời đúng
+                    correctAnswerElement.style.display = "block";
+                    setTimeout(() => {
+                        nextQuestionForm.submit();
+                    }, 3000);
+                }
+            }, 1000);
+        } else {
+            timerElement.textContent = "No time limit";
+        }
+    </script>
+
+    <style>
+        .card-body {
+            font-size: 1.1rem;
+        }
+
+        #timer {
+            margin-top: 1rem;
+        }
+    </style>
+}

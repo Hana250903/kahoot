@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Repository.UnitOfWork;
 using PRN222.Kahoot.Service.BusinessModels;
@@ -22,20 +23,9 @@ namespace PRN222.Kahoot.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateQuestionSession(int quizSessionId, List<QuestionModel> questionModel)
+        public async Task<bool> CreateQuestionSession(List<QuestionSessionModel> questionSessionModel)
         {
-            int index = 1;
-            var questionSessions = questionModel.Select(question => new QuestionSessionModel
-            {
-                QuestionId = question.QuestionId,
-                QuizSessionId = quizSessionId,
-                QuestionIndex = index++,
-                Point = 10, // Giả định mỗi câu 10 điểm
-                StartTime = DateTime.UtcNow.AddHours(7),
-                EndTime = DateTime.UtcNow.AddHours(7).AddSeconds(question.Duration)
-            }).ToList();
-
-            var questionSessionEntities = _mapper.Map<List<QuestionSession>>(questionSessions);
+            var questionSessionEntities = _mapper.Map<List<QuestionSession>>(questionSessionModel);
 
             await _unitOfWork.QuestionSessionRepository.AddRangeAsync(questionSessionEntities);
             
@@ -45,14 +35,16 @@ namespace PRN222.Kahoot.Service.Services
             return true;
         }
 
-        public Task<bool> DeleteQuestionSession(int id)
+        public async Task<QuestionSession> GetById(int id)
         {
-            throw new NotImplementedException();
-        }
+            var questionSession = await _unitOfWork.QuestionSessionRepository.FindAsync(c => c.QuestionSessionId == id,
+                i => i.Include(q => q.Question));
+            if (questionSession == null)
+            {
+                return null;
+            }
 
-        public Task<QuestionSessionModel> GetById(int id)
-        {
-            throw new NotImplementedException();
+            return questionSession;
         }
 
         public Task<Pagination<QuestionSessionModel>> GetQuestionSessions()
@@ -60,7 +52,40 @@ namespace PRN222.Kahoot.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateQuestionSession(QuestionSessionModel questionSessionModel)
+        public async Task<bool> UpdateQuestionSession(QuestionSessionModel questionSessionModel)
+        {
+            var questtionSession = _mapper.Map<QuestionSession>(questionSessionModel);
+
+            await _unitOfWork.QuestionSessionRepository.UpdateAsync(questtionSession);
+            await _unitOfWork.SaveChangeAsync();
+
+            return true;
+        }
+
+        public async Task<List<QuestionSession>> GetByQuizId(int quizId)
+        {
+            var questionSession = await _unitOfWork.QuestionSessionRepository.GetAsync(q => q.QuizSessionId == quizId,
+                i => i.Include(q => q.Question));
+            if (questionSession == null)
+            {
+                return null;
+            }
+
+            return questionSession;
+        }
+
+        public async Task<List<QuestionSession>> GetByCode(string code)
+        {
+            var questionSession = await _unitOfWork.QuestionSessionRepository.GetAsync(c => c.QuizSession.CodeRoom == code);
+
+            if (questionSession == null)
+            {
+                return null;
+            }
+            return questionSession;
+        }
+
+        public Task<bool> DeleteQuestionSession(int id)
         {
             throw new NotImplementedException();
         }

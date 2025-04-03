@@ -1,4 +1,5 @@
-﻿using PRN222.Kahoot.Service.BusinessModels;
+﻿using PRN222.Kahoot.Repository.Models;
+using PRN222.Kahoot.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -23,9 +23,10 @@ namespace PRN222.Kahoot.Razor.Pages.Quiz
 
 		public PaginationModel PaginationModel { get; set; }
 
-		public async Task OnGetAsync()
+        public async Task OnGetAsync()
         {
-            var list = await _quizService.GetQuizs(PaginationModel); 
-		}
+            var list = await _quizService.GetQuizs(PaginationModel);
+            Quiz = list;
+        }
     }
 }
