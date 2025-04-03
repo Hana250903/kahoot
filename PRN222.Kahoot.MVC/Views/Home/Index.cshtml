@@ -1,8 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <h1>Welcome to Kahoot</h1>
+    <p>Choose an action:</p>
+    <ul>
+        <li><a asp-controller="Participants" asp-action="Join" class="btn btn-primary">Join a Session</a></li>
+        <li><a asp-controller="Participants" asp-action="ParticipantList" class="btn btn-info">View Participant List</a></li>
+    </ul>
 </div>

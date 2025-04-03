@@ -1,0 +1,62 @@
+﻿@model PRN222.Kahoot.Service.BusinessModels.ParticipantModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h3>Participant Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Team:</dt>
+                        <dd class="col-sm-8">@Model.Team</dd>
+
+                        <dt class="col-sm-4">Score:</dt>
+                        <dd class="col-sm-8" id="scoreDisplay">@Model.Score</dd>
+
+                        <dt class="col-sm-4">Joined At:</dt>
+                        <dd class="col-sm-8">@Model.JoinAt.ToString("g")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Update Score</h4>
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control" id="scoreInput" placeholder="Enter points to add">
+                    <button class="btn btn-success" id="updateScoreBtn">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#updateScoreBtn').click(function() {
+                const points = $('#scoreInput').val();
+                const participantId = @Model.ParticipantId;
+
+                $.ajax({
+                    url: `/api/Participants/score/${participantId}?score=${points}`,
+                    type: 'PUT',
+                    success: function() {
+                        const currentScore = parseInt($('#scoreDisplay').text());
+                        $('#scoreDisplay').text(currentScore + parseInt(points));
+                        $('#scoreInput').val('');
+                        alert('Score updated successfully!');
+                    },
+                    error: function(xhr) {
+                        alert('Error updating score: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

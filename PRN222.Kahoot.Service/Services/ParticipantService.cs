@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Repository.UnitOfWork;
 using PRN222.Kahoot.Service.BusinessModels;
-using PRN222.Kahoot.Service.Services.Interfaces;
-using System;
+using PRN222.Kahoot.Service.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PRN222.Kahoot.Service.Services
@@ -21,29 +20,43 @@ namespace PRN222.Kahoot.Service.Services
             _mapper = mapper;
         }
 
-        public Task<bool> CreateParticipant(ParticipantModel participantModel)
+        public async Task<ParticipantModel> JoinSessionAsync(ParticipantModel model)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Participant>(model);
+            entity.JoinAt = DateTime.Now;
+            entity.Score = 0; // Điểm ban đầu
+            await _unitOfWork.ParticipantRepository.AddAsync(entity);
+            await _unitOfWork.SaveChangeAsync();
+            return _mapper.Map<ParticipantModel>(entity);
         }
 
-        public Task<bool> DeleteParticipant(int id)
+        public async Task<ParticipantModel> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _unitOfWork.ParticipantRepository
+                .FindAsync(p => p.ParticipantId == id,
+                    include: q => q.Include(p => p.User)
+                                   .Include(p => p.Session));
+            return _mapper.Map<ParticipantModel>(entity);
         }
 
-        public Task<ParticipantModel> GetById(int id)
+        public async Task<IEnumerable<ParticipantModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _unitOfWork.ParticipantRepository
+                .GetAsync(include: q => q.Include(p => p.User)
+                                         .Include(p => p.Session));
+            return _mapper.Map<List<ParticipantModel>>(entities);
         }
 
-        public Task<Pagination<ParticipantModel>> GetParticipants(PaginationModel paginationModel)
+        public async Task UpdateScoreAsync(int participantId, int score)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateParticipant(ParticipantModel participantModel)
-        {
-            throw new NotImplementedException();
+            var entity = await _unitOfWork.ParticipantRepository
+                .FindAsync(p => p.ParticipantId == participantId);
+            if (entity != null)
+            {
+                entity.Score = (entity.Score ?? 0) + score;
+                await _unitOfWork.ParticipantRepository.UpdateAsync(entity);
+                await _unitOfWork.SaveChangeAsync();
+            }
         }
     }
 }
