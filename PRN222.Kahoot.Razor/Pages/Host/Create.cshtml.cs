@@ -10,7 +10,7 @@ using PRN222.Kahoot.Service.BusinessModels;
 using PRN222.Kahoot.Service.Services;
 using PRN222.Kahoot.Service.Services.Interfaces;
 
-namespace PRN222.Kahoot.Razor.Pages.Room
+namespace PRN222.Kahoot.Razor.Pages.Host
 {
     public class CreateModel : PageModel
     {

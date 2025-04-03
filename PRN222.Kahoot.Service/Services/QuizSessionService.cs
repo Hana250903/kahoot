@@ -58,8 +58,6 @@ namespace PRN222.Kahoot.Service.Services
 
                 await _unitOfWork.SaveChangeAsync();
 
-                var result = await _questionSessionService.CreateQuestionSession(quizSession.SessionId, questionModel);
-
                 return quizSession;
             }
             catch (Exception ex)
@@ -121,7 +119,7 @@ namespace PRN222.Kahoot.Service.Services
 
         public async Task<QuizSessionModel> GetRoom(string code)
         {
-            var quizSession = await _unitOfWork.QuizSessionRepository.FindAsync(c =>c.CodeRoom == code, c => c.Include(c => c.Quiz));
+            var quizSession = await _unitOfWork.QuizSessionRepository.FindAsync(c => c.CodeRoom == code, c => c.Include(c => c.Quiz));
 
             if (quizSession == null)
             {
@@ -146,13 +144,23 @@ namespace PRN222.Kahoot.Service.Services
 
         public async Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel)
         {
-            var quizSession = _mapper.Map<QuizSession>(quizSessionModel);   
+            var quizSession = _mapper.Map<QuizSession>(quizSessionModel);
             quizSession.IsActive = true;
             quizSession.StartTime = DateTime.UtcNow.AddHours(7);
 
             await _unitOfWork.QuizSessionRepository.UpdateAsync(quizSession);
             await _unitOfWork.SaveChangeAsync();
             return true;
+        }
+
+        public async Task<QuizSession> GetByCode(string code)
+        {
+            var quizSession = await _unitOfWork.QuizSessionRepository.FindAsync(c => c.CodeRoom == code, i => i.Include(c => c.Quiz));
+            if (quizSession == null)
+            {
+                throw new Exception("Quiz session not found");
+            }
+            return quizSession;
         }
     }
 }
