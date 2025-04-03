@@ -19,5 +19,8 @@ namespace PRN222.Kahoot.Repository.UnitOfWork
         IGenericRepository<User> UserRepository { get; }
 
         Task<int> SaveChangeAsync();
+        void ChangeTracker();
+
+        void Detach<T>(T entity) where T : class;
     }
 }

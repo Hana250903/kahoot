@@ -1,0 +1,108 @@
+﻿@page
+@model PRN222.Kahoot.Razor.Pages.Room.JoinModel
+
+@{
+    ViewData["Title"] = "Theo dõi Room";
+}
+
+<h2>Game Tracking</h2>
+
+<h3>Room Code: @Model.Session.CodeRoom</h3>
+<h4>Quiz Title: @Model.Session.QuizTitle</h4>
+
+@if (!Model.Session.IsActive.HasValue || !Model.Session.IsActive.Value)
+{
+    <form method="post">
+        <input type="hidden" asp-for="Session.SessionId" />
+        <button type="submit" class="btn btn-primary">Start Game</button>
+    </form>
+}
+
+<hr>
+
+<h3>Current Question:</h3>
+@if (Model.CurrentQuestion != null)
+{
+    <p>@Model.CurrentQuestion.QuestionText</p>
+    <div>
+        <strong>Time Remaining: </strong>
+        <span id="timer">@Model.CurrentQuestion.Duration</span> seconds
+    </div>
+    <div id="progressBarContainer" style="width: 100%; background-color: #ddd; height: 20px; margin-top: 10px;">
+        <div id="progressBar" style="width: 100%; height: 100%; background-color: #4CAF50; transition: width 1s linear;"></div>
+    </div>
+    <ul>
+        <li>A: @Model.CurrentQuestion.Question1</li>
+        <li>B: @Model.CurrentQuestion.Question2</li>
+        <li>C: @Model.CurrentQuestion.Question3</li>
+        <li>D: @Model.CurrentQuestion.Question4</li>
+    </ul>
+}
+else
+{
+    <p>No questions available.</p>
+}
+
+<hr>
+
+@* <h3>Players:</h3> *@
+@* <table class="table"> *@
+@*     <thead> *@
+@*         <tr> *@
+@*             <th>Player Name</th> *@
+@*             <th>Score</th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@*         @foreach (var player in Model.Players) *@
+@*         { *@
+@*             <tr> *@
+@*                 <td>@player.PlayerName</td> *@
+@*                 <td>@player.Score</td> *@
+@*             </tr> *@
+@*         } *@
+@*     </tbody> *@
+@* </table> *@
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/gameHub").build();
+
+        connection.start().then(() => {
+            console.log("Connected to SignalR");
+            // Tham gia room
+            connection.invoke("JoinRoom", "@Model.Session.CodeRoom");
+        });
+
+        connection.on("StartGame", function () {
+            alert("The game has started!");
+        });
+
+        connection.on("UpdateTimer", function (remainingTime) {
+            const timerElement = document.getElementById("timer");
+            const progressBar = document.getElementById("progressBar");
+            const totalDuration = @Model.CurrentQuestion?.Duration ?? 0;
+
+            timerElement.textContent = remainingTime;
+
+            // Cập nhật thanh tiến trình
+            const percentage = (remainingTime / totalDuration) * 100;
+            progressBar.style.width = percentage + "%";
+
+            // Đổi màu thanh tiến trình
+            if (percentage <= 20) {
+                progressBar.style.backgroundColor = "#ff0000";
+            } else if (percentage <= 50) {
+                progressBar.style.backgroundColor = "#ffeb3b";
+            } else {
+                progressBar.style.backgroundColor = "#4CAF50";
+            }
+        });
+
+        connection.on("TimeUp", function () {
+            alert("Time's up!");
+            // TODO: Chuyển sang câu hỏi tiếp theo hoặc kết thúc game
+        });
+    </script>
+}

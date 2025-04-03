@@ -25,6 +25,11 @@ namespace PRN222.Kahoot.Repository.Repositories
             await _dbSet.AddAsync(entity);
         }
 
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
+
         public async Task<List<TEntity>> GetAsync()
         {
             return await _dbSet.AsNoTracking().ToListAsync();
