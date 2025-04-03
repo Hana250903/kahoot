@@ -58,5 +58,15 @@ namespace PRN222.Kahoot.Service.Services
                 await _unitOfWork.SaveChangeAsync();
             }
         }
+
+        public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddAsync(ParticipantModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

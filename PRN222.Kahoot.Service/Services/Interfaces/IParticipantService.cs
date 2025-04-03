@@ -12,7 +12,6 @@ namespace PRN222.Kahoot.Service.Interfaces
         Task<IEnumerable<ParticipantModel>> GetAllAsync();
         Task UpdateScoreAsync(int participantId, int score);
         Task DeleteAsync(int id);
-        Task UpdateAsync(ParticipantModel model);
 
         Task AddAsync(ParticipantModel model);
     }
