@@ -59,6 +59,27 @@ namespace PRN222.Kahoot.MVC.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteParticipant(int id)
+        {
+            await _participantService.DeleteAsync(id);
+            return Ok("Participant deleted successfully");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddParticipant([FromBody] ParticipantModel model)
+        {
+            await _participantService.AddAsync(model);
+            return Ok("Participant added successfully");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllParticipants()
+        {
+            var participants = await _participantService.GetAllAsync();
+            return Ok(participants);
+        }
+
         // ---------- MVC View Endpoints ----------
 
         [HttpGet("join-page")]
@@ -84,5 +105,6 @@ namespace PRN222.Kahoot.MVC.Controllers
             var participants = await _participantService.GetAllAsync();
             return View(participants);
         }
+
     }
 }
