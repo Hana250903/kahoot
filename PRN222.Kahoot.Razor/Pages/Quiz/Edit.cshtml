@@ -1,0 +1,60 @@
+﻿@page
+@model PRN222.Kahoot.Razor.Pages.Quiz.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Quiz</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Quiz.QuizId" />
+            <div class="form-group">
+                
+                <label asp-for="Quiz.Title" class="control-label"></label>
+                <input asp-for="Quiz.Title" class="form-control" />
+                <span asp-validation-for="Quiz.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Quiz.Description" class="control-label"></label>
+                <input asp-for="Quiz.Description" class="form-control" />
+                <span asp-validation-for="Quiz.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Quiz.Visibility" class="control-label"></label>
+                <input asp-for="Quiz.Visibility" class="form-control" />
+                <span asp-validation-for="Quiz.Visibility" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Quiz.CreateBy" class="control-label"></label>
+                <select asp-for="Quiz.CreateBy" class="form-control" asp-items="ViewBag.CreateBy"></select>
+                <span asp-validation-for="Quiz.CreateBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Quiz.CreateAt" class="control-label"></label>
+                <input asp-for="Quiz.CreateAt" class="form-control" />
+                <span asp-validation-for="Quiz.CreateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
