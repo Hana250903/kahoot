@@ -1,0 +1,38 @@
+﻿@model IEnumerable<PRN222.Kahoot.Service.BusinessModels.ParticipantModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Participant List</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>Score</th>
+                    <th>Joined At</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var participant in Model)
+                {
+                    <tr>
+                        <td>@participant.UserId</td>
+                        <td>@participant.Team</td>
+                        <td>@participant.Score</td>
+                        <td>@participant.JoinAt.ToString("g")</td>
+                        
+
+                        <td>
+                            <a href="/Participants/Details/@participant.ParticipantId" class="btn btn-sm btn-info">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

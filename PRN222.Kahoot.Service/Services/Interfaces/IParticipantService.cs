@@ -1,18 +1,19 @@
 ﻿using PRN222.Kahoot.Service.BusinessModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace PRN222.Kahoot.Service.Services.Interfaces
+namespace PRN222.Kahoot.Service.Interfaces
 {
     public interface IParticipantService
     {
-        Task<Pagination<ParticipantModel>> GetParticipants(PaginationModel paginationModel);
-        Task<ParticipantModel> GetById(int id);
-        Task<bool> CreateParticipant(ParticipantModel participantModel);
-        Task<bool> UpdateParticipant(ParticipantModel participantModel);
-        Task<bool> DeleteParticipant(int id);
+
+    Task<ParticipantModel> JoinSessionAsync(ParticipantModel model);
+        Task<ParticipantModel> GetByIdAsync(int id);
+        Task<IEnumerable<ParticipantModel>> GetAllAsync();
+        Task UpdateScoreAsync(int participantId, int score);
+        Task DeleteAsync(int id);
+        Task UpdateAsync(ParticipantModel model);
+
+        Task AddAsync(ParticipantModel model);
     }
 }

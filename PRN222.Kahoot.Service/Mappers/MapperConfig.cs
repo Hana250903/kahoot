@@ -19,7 +19,12 @@ namespace PRN222.Kahoot.Service.Mappers
             CreateMap<QuestionModel, Question>().ReverseMap();
             CreateMap<QuestionSessionModel, QuestionSession>().ReverseMap();
             CreateMap<QuizModel, Quiz>().ReverseMap();
-            CreateMap<ParticipantModel, Participant>().ReverseMap();
+            //CreateMap<ParticipantModel, Participant>().ReverseMap();
+            CreateMap<Participant, ParticipantModel>().ReverseMap();
+            CreateMap<QuizSession, SessionModel>()
+                .ForMember(dest => dest.CodeRoom, opt => opt.MapFrom(src => src.CodeRoom))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.StartTime))
+                .ReverseMap();
         }
     }
 }
