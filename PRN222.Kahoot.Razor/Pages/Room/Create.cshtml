@@ -24,11 +24,6 @@
                 <span asp-validation-for="QuizSession.CodeRoom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="QuizSession.EndTime" class="control-label"></label>
-                <input asp-for="QuizSession.EndTime" class="form-control" />
-                <span asp-validation-for="QuizSession.EndTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="QuizSession.TotalQuestion" class="control-label"></label>
                 <input asp-for="QuizSession.TotalQuestion" class="form-control" />
                 <span asp-validation-for="QuizSession.TotalQuestion" class="text-danger"></span>
@@ -51,4 +46,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#quizSelect").change(function () {
+                var quizId = $(this).val();
+                if (quizId) {
+                    $.ajax({
+                        url: "/api/quiz/get-details?quizId=" + quizId,
+                        type: "GET",
+                        success: function (data) {
+                            $("#totalQuestion").val(data.totalQuestion);
+                            $("#totalScore").val(data.totalScore);
+                        },
+                        error: function () {
+                            alert("Có lỗi xảy ra, vui lòng thử lại.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

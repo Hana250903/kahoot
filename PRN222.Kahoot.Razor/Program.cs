@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Repository.Repositories;
@@ -59,7 +59,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers(); // Thêm dòng này nếu chưa có
+    endpoints.MapRazorPages().WithStaticAssets(); ;
+});
 
 app.Run();

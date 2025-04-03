@@ -14,5 +14,7 @@ namespace PRN222.Kahoot.Service.Services.Interfaces
         Task<bool> CreateQuizSession(QuizSessionModel quizSessionModel);
         Task<bool> UpdateQuizSession(QuizSessionModel quizSessionModel);
         Task<bool> DeleteQuizSession(int id);
+
+        Task<QuizModel> QuizDetails(int id);
     }
 }
