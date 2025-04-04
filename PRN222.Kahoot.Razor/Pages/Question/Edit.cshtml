@@ -2,83 +2,113 @@
 @model PRN222.Kahoot.Razor.Pages.Question.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Question";
 }
+<body style="background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F2024_1_29_638421436218758181_background-xam.jpg?alt=media&token=55ff73e8-c4cd-4066-bcd3-14343f7705d8'); padding: 20px; border-radius: 10px; max-width: 2000px; ">
+<div>
+    <h1 class="text-center mb-4" style="color: blanchedalmond;">Edit Question</h1>
 
-<h1>Edit</h1>
-
-<h4>Question</h4>
+<h4 class="mb-4">Question Information</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row justify-content-center">
+    <div class="col-md-8">
+        <form method="post" class="bg-light p-4 rounded shadow-sm">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <input type="hidden" asp-for="Question.QuestionId" />
-            <div class="form-group">
-                
-                <label asp-for="Question.QuizId" class="control-label"></label>
-                <select asp-for="Question.QuizId" class="form-control" asp-items="ViewBag.QuizId"></select>
+
+            <!-- Quiz ID -->
+            <div class="form-group mb-3">
+                <label asp-for="Question.QuizId" class="control-label">Quiz ID</label>
+                <input asp-for="Question.QuizId" class="form-control" readonly />
                 <span asp-validation-for="Question.QuizId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.QuestionText" class="control-label"></label>
-                <input asp-for="Question.QuestionText" class="form-control" />
+
+            <div style="background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F476927559_1010892051062890_6842004734375534282_n.jpg?alt=media&token=d730c6a6-9b0a-45d2-ae83-fb67a8cf5a9f'); background-size: cover; padding: 20px; border-radius: 10px;">
+            <!-- Question Text -->
+            <div class="form-group mb-3">
+                <label asp-for="Question.QuestionText" class="control-label text-white">Question Text</label>
+                <textarea asp-for="Question.QuestionText" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.QuestionType" class="control-label"></label>
+
+            <!-- Answer Choices (A, B, C, D) -->
+            <div class="row mb-4">
+                <!-- Answer A -->
+                <div class="col-md-6">
+                    <div class="answer-box option-A p-3 rounded" style="background-color: #FF6347;">
+                        <label asp-for="Question.Question1" class="control-label text-white">Answer A</label>
+                        <input asp-for="Question.Question1" class="form-control" />
+                        <span asp-validation-for="Question.Question1" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Answer B -->
+                <div class="col-md-6">
+                    <div class="answer-box option-B p-3 rounded" style="background-color: #4682B4;">
+                        <label asp-for="Question.Question2" class="control-label text-white">Answer B</label>
+                        <input asp-for="Question.Question2" class="form-control" />
+                        <span asp-validation-for="Question.Question2" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <!-- Answer C -->
+                <div class="col-md-6">
+                    <div class="answer-box option-C p-3 rounded" style="background-color: #32CD32;">
+                        <label asp-for="Question.Question3" class="control-label text-white">Answer C</label>
+                        <input asp-for="Question.Question3" class="form-control" />
+                        <span asp-validation-for="Question.Question3" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Answer D -->
+                <div class="col-md-6">
+                    <div class="answer-box option-D p-3 rounded" style="background-color: #FFD700;">
+                        <label asp-for="Question.Question4" class="control-label text-white">Answer D</label>
+                        <input asp-for="Question.Question4" class="form-control" />
+                        <span asp-validation-for="Question.Question4" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Question Type, Duration, and Correct Answer -->
+            <div class="form-group mb-3">
+                <label asp-for="Question.QuestionType" class="control-label">Question Type</label>
                 <input asp-for="Question.QuestionType" class="form-control" />
                 <span asp-validation-for="Question.QuestionType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.Duration" class="control-label"></label>
+
+            <div class="form-group mb-3">
+                <label asp-for="Question.Duration" class="control-label">Duration (Seconds)</label>
                 <input asp-for="Question.Duration" class="form-control" />
                 <span asp-validation-for="Question.Duration" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.Question1" class="control-label"></label>
-                <input asp-for="Question.Question1" class="form-control" />
-                <span asp-validation-for="Question.Question1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.Question2" class="control-label"></label>
-                <input asp-for="Question.Question2" class="form-control" />
-                <span asp-validation-for="Question.Question2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.Question3" class="control-label"></label>
-                <input asp-for="Question.Question3" class="form-control" />
-                <span asp-validation-for="Question.Question3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.Question4" class="control-label"></label>
-                <input asp-for="Question.Question4" class="form-control" />
-                <span asp-validation-for="Question.Question4" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Question.Answer" class="control-label"></label>
+
+            <div class="form-group mb-3">
+                <label asp-for="Question.Answer" class="control-label">Correct Answer</label>
                 <input asp-for="Question.Answer" class="form-control" />
                 <span asp-validation-for="Question.Answer" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Save Button -->
+            <div class="form-group text-center">
+                <input type="submit" value="Save" class="btn btn-primary btn-lg px-4" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
+<!-- Back to List Button -->
+<div class="text-center mt-4">
+    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
 </div>
-
+</div>
+</body>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -2,83 +2,201 @@
 @model PRN222.Kahoot.Razor.Pages.Question.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage Questions";
 }
 
-<h1>Index</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].QuestionText)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].QuestionType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].Question1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].Question2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].Question3)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].Question4)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].Answer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question[0].QuizId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Question) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuestionText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuestionType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question3)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question4)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Answer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuizId)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.QuestionId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.QuestionId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.QuestionId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .container {
+            margin-top: 20px;
+            max-width: 1700px;
+        }
+
+        .question-list {
+            max-height: 500px;
+            overflow-y: auto;
+            border-right: 2px solid #ddd;
+        }
+
+        .question-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            transition: background 0.3s;
+        }
+
+            .question-item:hover, .active-question {
+                background-color: #17a2b8;
+                color: white;
+            }
+
+        .question-detail {
+            padding: 20px;
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F476927559_1010892051062890_6842004734375534282_n.jpg?alt=media&token=d730c6a6-9b0a-45d2-ae83-fb67a8cf5a9f');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+            .question-detail h4 {
+                text-align: center;
+            }
+
+        .form-group label, .form-group p {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .question-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+            .question-options button {
+                width: 45%;
+                margin-top: 10px;
+                padding: 10px;
+                color: white;
+                font-weight: bold;
+            }
+
+        .option-A {
+            background-color: #FF6347; /* Tomato */
+        }
+
+        .option-B {
+            background-color: #4682B4; /* Steel Blue */
+        }
+
+        .option-C {
+            background-color: #32CD32; /* Lime Green */
+        }
+
+        .option-D {
+            background-color: #FFD700; /* Gold */
+        }
+
+        .action-buttons a {
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .question-text-box {
+            background-color: white;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .blackcolor{
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Manage Questions</h1>
+
+        <div class="row">
+            <!-- Danh sách câu hỏi -->
+            <div class="col-md-3 question-list bg-white p-3">
+                <h4 class="text-center">Questions</h4>
+                <hr />
+                @foreach (var item in Model.Question)
+                {
+                    <div class="question-item" onclick="showQuestionDetail(@item.QuestionId)" id="question-@item.QuestionId">
+                        <strong>@item.QuestionText</strong>
+                    </div>
+                }
+            </div>
+
+            <!-- Chi tiết câu hỏi -->
+            <div class="col-md-6 question-detail bg-white">
+                <h4 class="blackcolor text-center">Question Details</h4>
+                <hr />
+                <div id="question-details">
+                    <p class="text-muted text-center">Select a question to view details</p>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="col-md-3 action-buttons text-center bg-white p-3">
+                <h4>Actions</h4>
+                <hr />
+                <div id="question-actions">
+                    <p class="text-muted">No question selected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showQuestionDetail(id) {
+            const questions = @Html.Raw(Json.Serialize(Model.Question));
+
+            let selectedQuestion = questions.find(q => q.questionId === id);
+            if (!selectedQuestion) return;
+
+            // Highlight active question
+            document.querySelectorAll('.question-item').forEach(el => el.classList.remove('active-question'));
+            document.getElementById(`question-${id}`).classList.add('active-question');
+
+            // Hiển thị câu hỏi và các lựa chọn A, B, C, D
+            document.getElementById("question-details").innerHTML = `
+                <div class="form-group">
+                    <label>Question:</label>
+                    <div class="question-text-box">
+                        <strong>${selectedQuestion.questionText}</strong>
+                    </div>
+                </div>
+                <div class="question-options">
+                    <button class="option-A">${selectedQuestion.question1}</button>
+                    <button class="option-B">${selectedQuestion.question2}</button>
+                </div>
+                <div class="question-options">
+                    <button class="option-C">${selectedQuestion.question3}</button>
+                    <button class="option-D">${selectedQuestion.question4}</button>
+                </div>
+            `;
+
+            // Hiển thị thông tin câu hỏi ở phần Actions
+            document.getElementById("question-actions").innerHTML = `
+                <div class="form-group">
+                    <label>Question Type:</label>
+                    <p>${selectedQuestion.questionType}</p>
+                </div>
+                <div class="form-group">
+                    <label>Duration:</label>
+                    <p>${selectedQuestion.duration} seconds</p>
+                </div>
+                <div class="form-group">
+                    <label>Correct Answer:</label>
+                    <p><strong>${selectedQuestion.answer}</strong></p>
+                </div>
+                <a href="/Question/Edit?id=${selectedQuestion.questionId}" class="btn btn-warning btn-block">Edit</a>
+                <a href="/Question/Create?id=${selectedQuestion.questionId}" class="btn btn-info btn-block">Create</a>
+                <a href="/Question/Delete?id=${selectedQuestion.questionId}" class="btn btn-danger btn-block">Delete</a>
+            `;
+        }
+    </script>
+</body>
+</html>
