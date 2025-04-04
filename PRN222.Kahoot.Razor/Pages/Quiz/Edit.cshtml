@@ -2,59 +2,67 @@
 @model PRN222.Kahoot.Razor.Pages.Quiz.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Quiz";
 }
 
-<h1>Edit</h1>
+<body style="background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F2024_1_29_638421436218758181_background-xam.jpg?alt=media&token=55ff73e8-c4cd-4066-bcd3-14343f7705d8'); padding: 20px; border-radius: 10px;">
+    <div class="text-center">
+        <h1 class="mb-4" style="color: blanchedalmond;">Edit Quiz</h1>
 
-<h4>Quiz</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Quiz.QuizId" />
-            <div class="form-group">
-                
-                <label asp-for="Quiz.Title" class="control-label"></label>
-                <input asp-for="Quiz.Title" class="form-control" />
-                <span asp-validation-for="Quiz.Title" class="text-danger"></span>
+        <h4 class="mb-4 text-white">Quiz Information</h4>
+        <hr />
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form method="post" class="bg-light p-4 rounded shadow-sm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Quiz.QuizId" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Quiz.Title" class="control-label text-dark">Title</label>
+                        <input asp-for="Quiz.Title" class="form-control" />
+                        <span asp-validation-for="Quiz.Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Quiz.Description" class="control-label text-dark">Description</label>
+                        <input asp-for="Quiz.Description" class="form-control" />
+                        <span asp-validation-for="Quiz.Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Quiz.Visibility" class="control-label text-dark">Visibility</label>
+                        <input asp-for="Quiz.Visibility" class="form-control" />
+                        <span asp-validation-for="Quiz.Visibility" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Quiz.CreateBy" class="control-label text-dark">Creator</label>
+                        <select asp-for="Quiz.CreateBy" class="form-control" asp-items="ViewBag.CreateBy"></select>
+                        <span asp-validation-for="Quiz.CreateBy" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Quiz.CreateAt" class="control-label text-dark">Created At</label>
+                        <input asp-for="Quiz.CreateAt" class="form-control" />
+                        <span asp-validation-for="Quiz.CreateAt" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group text-center mb-4">
+                        <input type="submit" value="Save" class="btn btn-primary btn-lg px-4" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                
-                <label asp-for="Quiz.Description" class="control-label"></label>
-                <input asp-for="Quiz.Description" class="form-control" />
-                <span asp-validation-for="Quiz.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Quiz.Visibility" class="control-label"></label>
-                <input asp-for="Quiz.Visibility" class="form-control" />
-                <span asp-validation-for="Quiz.Visibility" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Quiz.CreateBy" class="control-label"></label>
-                <select asp-for="Quiz.CreateBy" class="form-control" asp-items="ViewBag.CreateBy"></select>
-                <span asp-validation-for="Quiz.CreateBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Quiz.CreateAt" class="control-label"></label>
-                <input asp-for="Quiz.CreateAt" class="form-control" />
-                <span asp-validation-for="Quiz.CreateAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-page="./Index" class="btn btn-secondary btn-lg">Back to Quiz List</a>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
+</body>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

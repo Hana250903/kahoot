@@ -4,37 +4,131 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
 
-<h4>Kahoot Member</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2FKahoot.png?alt=media&token=98af51cd-9f86-4147-9f61-70597f2a2912');
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bodyconfig {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+            .form-control::placeholder {
+                color: #888;
+            }
+
+        .btn-enter {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #00008B; /* Đây là mã hex cho màu xanh nước biển nhạt */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-enter:hover {
+                background-color: #87CEEB;
+            }
+
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+
+        .register-link {
+            margin-top: 10px;
+            display: block;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bodyconfig">
+    <div class="login-container">
+        <h2>Đăng nhập</h2>
+
+        @if (ViewData["Error"] != null)
+        {
+            <p class="error-message">@ViewData["Error"]</p>
+        }
+
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="UserModel.Username" class="control-label"></label>
-                <input asp-for="UserModel.Username" class="form-control" />
+                <input asp-for="UserModel.Username" class="form-control" placeholder="Username" required />
                 <span asp-validation-for="UserModel.Username" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="UserModel.Password" class="control-label"></label>
-                <input type="password" asp-for="UserModel.Password" class="form-control" />
+                <input type="password" asp-for="UserModel.Password" class="form-control" placeholder="Password" required />
                 <span asp-validation-for="UserModel.Password" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-    <div>
-        <a asp-page="/Account/Register">Register</a>
-    </div>
-</div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            <button type="submit" class="btn-enter">Enter</button>
+        </form>
+
+        <a asp-page="/Account/Register" class="register-link">Chưa có tài khoản? Đăng ký ngay</a>
+    </div>
+    </div>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
     }
-}
+
+</body>
+</html>

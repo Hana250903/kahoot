@@ -5,69 +5,108 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<body style="background-image: url('https://firebasestorage.googleapis.com/v0/b/imageuploadv3.appspot.com/o/TestFile%2F2024_1_29_638421436218758181_background-xam.jpg?alt=media&token=55ff73e8-c4cd-4066-bcd3-14343f7705d8'); padding: 20px; border-radius: 10px; max-width: 2000px; ">
+    <div>
+        <h1 class="text-center mb-4" style="color: blanchedalmond;">Delete Question</h1>
+        <h3 class="text-center">Are you sure you want to delete this?</h3>
+        <hr />
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form method="post" class="bg-light p-4 rounded shadow-sm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Question.QuestionId" />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Question</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.QuestionText)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.QuestionText)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.QuestionType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.QuestionType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.Duration)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.Duration)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.Question1)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.Question1)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.Question2)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.Question2)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.Question3)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.Question3)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.Question4)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.Question4)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.Answer)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Question.Answer)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Question.QuizId)
-        </dt>
-    </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Question.QuestionId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
-</div>
+                    <!-- Quiz ID -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Question.QuizId" class="control-label">Quiz ID</label>
+                        <input asp-for="Question.QuizId" class="form-control" readonly />
+                        <span asp-validation-for="Question.QuizId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Question Text -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Question.QuestionText" class="control-label">Question Text</label>
+                        <textarea asp-for="Question.QuestionText" class="form-control" rows="3" readonly></textarea>
+                        <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
+                    </div>
+
+                    <!-- Answer Choices (A, B, C, D) -->
+                    <div class="row mb-4">
+                        <!-- Answer A -->
+                        <div class="col-md-6">
+                            <div class="answer-box option-A p-3 rounded" style="background-color: #FF6347;">
+                                <label asp-for="Question.Question1" class="control-label text-white">Answer A</label>
+                                <input asp-for="Question.Question1" class="form-control" readonly />
+                                <span asp-validation-for="Question.Question1" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Answer B -->
+                        <div class="col-md-6">
+                            <div class="answer-box option-B p-3 rounded" style="background-color: #4682B4;">
+                                <label asp-for="Question.Question2" class="control-label text-white">Answer B</label>
+                                <input asp-for="Question.Question2" class="form-control" readonly />
+                                <span asp-validation-for="Question.Question2" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <!-- Answer C -->
+                        <div class="col-md-6">
+                            <div class="answer-box option-C p-3 rounded" style="background-color: #32CD32;">
+                                <label asp-for="Question.Question3" class="control-label text-white">Answer C</label>
+                                <input asp-for="Question.Question3" class="form-control" readonly />
+                                <span asp-validation-for="Question.Question3" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Answer D -->
+                        <div class="col-md-6">
+                            <div class="answer-box option-D p-3 rounded" style="background-color: #FFD700;">
+                                <label asp-for="Question.Question4" class="control-label text-white">Answer D</label>
+                                <input asp-for="Question.Question4" class="form-control" readonly />
+                                <span asp-validation-for="Question.Question4" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Type, Duration, and Correct Answer -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Question.QuestionType" class="control-label">Question Type</label>
+                        <input asp-for="Question.QuestionType" class="form-control" readonly />
+                        <span asp-validation-for="Question.QuestionType" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Question.Duration" class="control-label">Duration (Seconds)</label>
+                        <input asp-for="Question.Duration" class="form-control" readonly />
+                        <span asp-validation-for="Question.Duration" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Question.Answer" class="control-label">Correct Answer</label>
+                        <input asp-for="Question.Answer" class="form-control" readonly />
+                        <span asp-validation-for="Question.Answer" class="text-danger"></span>
+                    </div>
+
+                    <!-- Delete Button -->
+                    <div class="form-group text-center">
+                        <input type="submit" value="Delete" class="btn btn-danger btn-lg px-4" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Back to List Button -->
+        <div class="text-center mt-4">
+            <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
