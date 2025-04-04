@@ -19,5 +19,6 @@ namespace PRN222.Kahoot.Service.Services.Interfaces
         Task<List<QuestionSession>> GetByQuizId(int QuizId);
 
         Task<List<QuestionSession>> GetByCode(string code);
+        Task<List<QuestionSession>> GetByQuizSessionId(int quizSessionId);
     }
 }

@@ -36,23 +36,70 @@
     }
 </style>
 
-
 <div class="waiting-container">
     <h1 style="color: black;">Waiting for Host to Start...</h1>
+    <h2 style="color: black;">Room Code: @Model.Code</h2>
+    <div class="row" id="playersContainer">
+        <!-- Danh sách người chơi sẽ được cập nhật qua SignalR -->
+    </div>
     <div class="spinner"></div>
-    <p style="color: black;" id="playerCount">Players joined: 0</p>
 </div>
 
 @section Scripts {
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
     <script>
-        $(document).ready(function() {
-            function updatePlayerCount() {
-                $.get("/api/participants", function(data) {
-                    $("#playerCount").text("Players joined: " + data.length);
+            const code = "@Model.Code";
+            const playerId = @Model.PlayerId;
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:7252/gameHub")
+                .withAutomaticReconnect()
+                .build();
+
+            function startConnection() {
+                connection.start()
+                    .then(() => {
+                        console.log("Connected to SignalR server.");
+                    connection.invoke("JoinRoom", code, playerId)
+                            .then(() => console.log(`Player ${playerId} joined Room_${code} successfully`))
+                            .catch(err => console.error("JoinRoom Error: ", err));
+                    })
+                    .catch(err => {
+                        console.error("Connection Error: ", err);
+                        setTimeout(startConnection, 2000); // Thử lại nếu lỗi
+                    });
+            }
+
+            connection.on("QuizStarted", function (roomCode) {
+                console.log("Quiz started for Room_" + roomCode);
+                window.location.href = `/Game?code=${roomCode}&playerId=${playerId}`;
+            });
+
+            connection.onclose(() => {
+                console.log("SignalR connection closed. Reconnecting...");
+                startConnection();
+            });
+
+            connection.on("UpdatePlayers", function (players) {
+            console.log("Received updated players:", players);
+            updateTeamsUI(players);
+            });
+
+            function updateTeamsUI(players) {
+            const container = document.getElementById("playersContainer");
+                container.innerHTML = "";
+                players.forEach(player => {
+                    const playerDiv = document.createElement("div");
+                    playerDiv.className = "col-md-3 mb-4";
+                    playerDiv.innerHTML = `
+                        <div class="card">
+                            <div class="card-header bg-info text-white">${player.User.Username}</div>
+                        </div>
+                    `;
+                    container.appendChild(playerDiv);
                 });
             }
 
-            setInterval(updatePlayerCount, 3000);
-        });
+            startConnection();
     </script>
 }
