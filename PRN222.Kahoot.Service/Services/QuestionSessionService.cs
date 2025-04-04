@@ -7,6 +7,7 @@ using PRN222.Kahoot.Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,6 +89,18 @@ namespace PRN222.Kahoot.Service.Services
         public Task<bool> DeleteQuestionSession(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<QuestionSession>> GetByQuizSessionId(int quizSessionId)
+        {
+            var questionSession = await _unitOfWork.QuestionSessionRepository.GetAsync(c => c.QuizSessionId == quizSessionId,
+                i => i.Include(q => q.Question));
+
+            if (questionSession == null)
+            {
+                return null;
+            }
+            return questionSession;
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PRN222.Kahoot.Repository.Models;
 using PRN222.Kahoot.Service.BusinessModels;
 using PRN222.Kahoot.Service.Interfaces;
 using PRN222.Kahoot.Service.Services.Interfaces;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PRN222.Kahoot.MVC.Controllers
@@ -24,24 +26,48 @@ namespace PRN222.Kahoot.MVC.Controllers
 
         // ---------- API Endpoints ----------
 
-        [HttpPost("join")]
-        public async Task<IActionResult> JoinSession([FromBody] JoinRequestModel model)
+        [HttpPost("join-page")]
+        public async Task<IActionResult> JoinSession([FromForm] string codeRoom)
         {
-            var session = await _sessionService.GetSessionByCodeAsync(model.CodeRoom);
+            if (string.IsNullOrEmpty(codeRoom))
+            {
+                ViewData["Error"] = "Mã session không được để trống.";
+                return View("Join");
+            }
+
+            var session = await _sessionService.GetSessionByCodeAsync(codeRoom);
             if (session == null)
             {
-                return BadRequest("Invalid session code.");
+                ViewData["Error"] = "Mã session không hợp lệ.";
+                return View("Join");
+            }
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                ViewData["Error"] = "Người dùng chưa đăng nhập.";
+                return View("Join");
+            }
+
+            // Lấy ClaimsPrincipal từ User
+            var claimsPrincipal = User as ClaimsPrincipal;
+            string userId = claimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Sử dụng "UserId" đã lưu khi đăng nhập
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                ViewData["Error"] = "Không thể xác định ID người dùng.";
+                return View("Join");
             }
 
             var participantModel = new ParticipantModel
             {
                 SessionId = session.SessionId,
-                UserId = 0, // Nếu có đăng nhập, lấy userId từ HttpContext
-                Team = model.Team
+                UserId = int.Parse(userId),
+                Team = codeRoom
             };
 
             var result = await _participantService.JoinSessionAsync(participantModel);
-            return Ok(result);
+            ViewData["Success"] = $"Tham gia session thành công với ID: {result.ParticipantId}";
+            return RedirectToAction("Waiting", "Waiting", new { code = codeRoom });
         }
 
         [HttpGet("{id}")]

@@ -3,6 +3,5 @@
     public class JoinRequestModel
     {
         public string CodeRoom { get; set; }
-        public string Team { get; set; }
     }
 }
