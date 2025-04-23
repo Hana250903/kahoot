@@ -49,20 +49,21 @@
 @section Scripts {
     <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
     <script>
-            const connection = new signalR.HubConnectionBuilder()
+        const code = "@(code)";  // Nếu là chuỗi, cần bọc trong dấu nháy
+        const playerId = @(playerId);  // Nếu là số, có thể giữ nguyên
+        const connection = new signalR.HubConnectionBuilder()
                 .withUrl("https://localhost:7252/gameHub")
                 .withAutomaticReconnect()
                 .build();
 
         let countdown;
-        let currentOrder = 0;
+        const currentOrder = 0;
 
         function startConnection() {
             connection.start()
                 .then(() => {
                     console.log("Connected to SignalR server.");
-                                let code = "@(code)";  // Nếu là chuỗi, cần bọc trong dấu nháy
-                                let playerId = @(playerId);  // Nếu là số, có thể giữ nguyên
+                                
                                 console.log(`Player ${playerId} joined Room_${code} successfully`);
 
                     if (code && playerId) {
@@ -78,6 +79,8 @@
                     setTimeout(startConnection, 2000);
                 });
         }
+
+        startConnection();
 
         connection.on("SendQuestion", function (questionData) {
             console.log("Received question:", questionData);
@@ -102,15 +105,15 @@
             const statusElement = document.getElementById("status");
 
             questionText.textContent = questionData.question.questionText;
-            answerA.textContent = questionData.question.answerA;
-            answerB.textContent = questionData.question.answerB;
-            answerC.textContent = questionData.question.answerC;
-            answerD.textContent = questionData.question.answerD;
+            answerA.textContent = questionData.question.question1;
+            answerB.textContent = questionData.question.question2;
+            answerC.textContent = questionData.question.question3;
+            answerD.textContent = questionData.question.question4;
             answerOptions.style.display = "block";
             correctAnswerElement.style.display = "none";
             statusElement.textContent = "";
 
-            let timeLeft = questionData.question.timeLimit || 10;
+            let timeLeft = questionData.question.duration || 10;
             timerElement.textContent = `Time Left: ${timeLeft}s`;
 
             if (countdown) clearInterval(countdown);
@@ -163,7 +166,6 @@
             startConnection();
         });
 
-        startConnection();
     </script>
 
     <style>

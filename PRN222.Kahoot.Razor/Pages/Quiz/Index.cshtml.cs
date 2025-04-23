@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ namespace PRN222.Kahoot.Razor.Pages.Quiz
 {
     public class IndexModel : PageModel
     {
-		private IQuizService _quizService;
+        [Authorize(Roles = "Admin")]
+        private IQuizService _quizService;
 
 		public IndexModel(IQuizService quizService)
         {

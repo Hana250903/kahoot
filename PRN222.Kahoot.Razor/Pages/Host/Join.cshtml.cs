@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace PRN222.Kahoot.Razor.Pages.Host
 {
+    [Authorize(Roles = "Admin")]
     public class JoinModel : PageModel
     {
         private readonly IQuizSessionService _quizSessionService;
@@ -26,6 +28,8 @@ namespace PRN222.Kahoot.Razor.Pages.Host
             _mapper = mapper;
         }
         public QuestionSession CurrentQuestion { get; set; }
+
+        public QuestionRequestModel QuestionRequest; 
 
         public string Code { get; set; }
         public int TotalQuestions { get; set; }
@@ -78,9 +82,21 @@ namespace PRN222.Kahoot.Razor.Pages.Host
 
             CurrentQuestion = currentQuestionSession;
 
+            QuestionRequest = new QuestionRequestModel
+            {
+                QuestionText = currentQuestion.Question.QuestionText,
+                AnswerA = currentQuestion.Question.Question1,
+                AnswerB = currentQuestion.Question.Question2,
+                AnswerC = currentQuestion.Question.Question3,
+                AnswerD = currentQuestion.Question.Question4,
+                Answer = currentQuestion.Question.Answer,
+                TimeLimit = currentQuestion.Question.Duration,
+                QuestionIndex = currentQuestion.QuestionIndex
+            };
+
             await Task.Delay(2000);
 
-            await _hubContext.Clients.Group(roomCode).SendAsync("SendQuestion", CurrentQuestion);
+            await _hubContext.Clients.Group(roomCode).SendAsync("SendQuestion", QuestionRequest);
 
             return Page();
         }
