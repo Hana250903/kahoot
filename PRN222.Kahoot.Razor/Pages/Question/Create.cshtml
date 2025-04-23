@@ -20,8 +20,7 @@
                     <!-- Quiz ID -->
                     <div class="form-group mb-3">
                         <label asp-for="Question.QuizId" class="control-label">Quiz ID</label>
-                        <input asp-for="Question.QuizId" class="form-control" />
-                        <span asp-validation-for="Question.QuizId" class="text-danger"></span>
+                        <select asp-for="Question.QuizId" class="form-control" asp-items="ViewBag.QuizId"></select>
                     </div>
 
                     <!-- Question Text -->

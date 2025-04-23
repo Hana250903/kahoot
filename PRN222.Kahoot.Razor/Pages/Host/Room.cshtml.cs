@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace PRN222.Kahoot.Razor.Pages.Host
 {
+    [Authorize(Roles = "Admin")]
     public class RoomModel : PageModel
     {
         private readonly IQuizSessionService _quizSessionService;

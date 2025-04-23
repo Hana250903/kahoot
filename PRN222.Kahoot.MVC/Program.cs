@@ -46,6 +46,17 @@ builder.Services.AddScoped<ISessionService, SessionService>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig).Assembly);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.SetIsOriginAllowed(_ => true) // Cho phép mọi origin
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,6 +69,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 
